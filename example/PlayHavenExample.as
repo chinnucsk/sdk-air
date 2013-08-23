@@ -1,7 +1,6 @@
 package  
 {
 import com.playhaven.ui.NotificationBadge;
-import flash.desktop.NativeApplication;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Rectangle;
@@ -78,9 +77,9 @@ public class PlayHavenExample extends Sprite
 		PlayHaven.playhaven.addEventListener(PlayHavenEvent.REWARD_UNLOCKED,onReward);
 		
 		// listeners for in-app Virtual Good Promotions
-		PlayHaven.playhaven.addEventListener(PlayHavenEvent.PURCHASE_REPORTED,onPurchaseReported);
-		PlayHaven.playhaven.addEventListener(PlayHavenEvent.PURCHASE_REQUESTED,onPurchaseRequested);
-		PlayHaven.playhaven.addEventListener(PlayHavenEvent.PURCHASE_REPORT_FAILED,onPurchaseReportFailed);
+		PlayHaven.playhaven.addEventListener(PlayHavenEvent.VGP_PURCHASE_REPORTED,onVgpReported);
+		PlayHaven.playhaven.addEventListener(PlayHavenEvent.VGP_PURCHASE_REQUESTED,onVgpRequested);
+		PlayHaven.playhaven.addEventListener(PlayHavenEvent.VGP_PURCHASE_REPORT_FAILED,onVgpReportFailed);
 
 		log("PlayHaven Initialized!");
 		
@@ -192,7 +191,7 @@ public class PlayHavenExample extends Sprite
 	/** On Content Dismissed */
 	private function onContentDismissed(e:PlayHavenEvent):void
 	{
-		log("Content dismissed: "+e.contentDismissalReason);
+		log("Content dismissed: "+e.placementId+" for "+e.contentDismissalReason);
 	}
 	
 	/** Content Displayed */
@@ -207,8 +206,8 @@ public class PlayHavenExample extends Sprite
 		log("Reward "+e.rewardName+","+e.rewardQuantity+","+e.rewardReceipt);
 	}
 	
-	/** Purchase Requested */
-	private function onPurchaseRequested(e:PlayHavenEvent):void
+	/** VGP Purchase Requested */
+	private function onVgpRequested(e:PlayHavenEvent):void
 	{
 		log("purchase requested:"+e.purchase.receipt+"/"+e.purchase.productId);
 		
@@ -228,7 +227,7 @@ public class PlayHavenExample extends Sprite
 		var closePurchase:Function=function():void
 		{
 			myLog("Close purchase...");
-			PlayHaven.playhaven.reportPurchaseResolution(purchase,PHPurchaseResolution.BUY);
+			PlayHaven.playhaven.reportVGPPurchaseResolution(purchase,PHPurchaseResolution.BUY);
 			myLog("did report close.");
 		}
 		log("set timeout purchase callback...");
@@ -236,14 +235,14 @@ public class PlayHavenExample extends Sprite
 		
 	}
 	
-	/** Purchase Reported */
-	private function onPurchaseReported(e:PlayHavenEvent):void
+	/** VGP Purchase Reported */
+	private function onVgpReported(e:PlayHavenEvent):void
 	{
 		log("purchase reported:"+e.purchase);
 	}
 	
-	/** Purchase Report Failed */
-	private function onPurchaseReportFailed(e:PlayHavenEvent):void
+	/** VGP Purchase Report Failed */
+	private function onVgpReportFailed(e:PlayHavenEvent):void
 	{
 		log("purchase report failed:"+e.errorMessage);
 	}

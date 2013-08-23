@@ -22,8 +22,11 @@ A complete sample class demonstrating the functionality of PlayHaven Adobe Air e
 
 Refer to the [API reference documentation](http://docs.playhaven.com/adobe-air/) for more information on the packages and classes in this extension. 
 
+
 <a id="include"></a>
 ## Include the PlayHaven library ##
+
+***Before you begin:*** *This extension requires Adobe AIR 3.5 or higher.  You can get the latest AIR SDK from [here](http://www.adobe.com/devnet/air/air-sdk-download.html).*
 
 **In Flash Professional:**
 
@@ -33,7 +36,7 @@ Refer to the [API reference documentation](http://docs.playhaven.com/adobe-air/)
 4. Select the Library Path tab.
 5. Press the Browse for Native Extension (ANE) File button and select the `com.playhaven.extensions.PlayHaven.ane` file.
 
-**In Flash Builder 4.6:**
+**In Flash Builder 4.6 or Later:**
 
 1. Go to Project Properties (right-click your project in Package Explorer and select Properties).
 2. Select ActionScript Build Path and click the Native Extensions tab.
@@ -244,7 +247,7 @@ The following example shows the handling of an in-app purchase, using the [Milkm
 	...
 
 
-	PlayHaven.playhaven.addEventListener(PlayHavenEvent.PURCHASE_REPORTED,onPlayHavenPurchase);
+	PlayHaven.playhaven.addEventListener(PlayHavenEvent.VGP_PURCHASE_REPORTED,onPlayHavenPurchase);
 
 	function onPlayHavenPurchase(e:PlayHavenPurchase):void
 	{
@@ -260,17 +263,17 @@ When your In-App Purchase extension reports the completion or failure of the tra
 	
 	function onPurchaseSuccess(e:StoreKitEvent):void
 	{
-		PlayHaven.playhaven.reportPurchaseResolution(pendingPurchase,PHPurchaseResolution.BUY);
+		PlayHaven.playhaven.reportVGPPurchaseResolution(pendingPurchase,PHPurchaseResolution.BUY);
 	}
 
 	function onPurchaseFailed(e:StoreKitErrorEvent):void
 	{
-		PlayHaven.playhaven.reportPurchaseResolution(pendingPurchase,PHPurchaseResolution.ERROR);
+		PlayHaven.playhaven.reportVGPPurchaseResolution(pendingPurchase,PHPurchaseResolution.ERROR);
 	}
 
 	function onPurchaseCancel(e:StoreKitEvent):void
 	{
-		PlayHaven.playhaven.reportPurchaseResolution(pendingPurchase,PHPurchaseResolution.CANCEL);
+		PlayHaven.playhaven.reportVGPPurchaseResolution(pendingPurchase,PHPurchaseResolution.CANCEL);
 	}
 
 The following example shows the same process for Android, using the [Milkman Games Android In-App Billing Extension](http://www.adobe.com/devnet/air/articles/android-billing-ane.html) to handle the transaction:
@@ -280,7 +283,7 @@ The following example shows the same process for Android, using the [Milkman Gam
 	...
 
 
-	PlayHaven.playhaven.addEventListener(PlayHavenEvent.PURCHASE_REPORTED,onPlayHavenPurchase);
+	PlayHaven.playhaven.addEventListener(PlayHavenEvent.VGP_PURCHASE_REPORTED,onPlayHavenPurchase);
 
 	function onPlayHavenPurchase(e:PlayHavenPurchase):void
 	{
@@ -294,18 +297,25 @@ The following example shows the same process for Android, using the [Milkman Gam
 
 	function onPurchaseSuccess(e:AndroidBillingEvent):void
 	{
-		PlayHaven.playhaven.reportPurchaseResolution(pendingPurchase,PHPurchaseResolution.BUY);
+		PlayHaven.playhaven.reportVGPPurchaseResolution(pendingPurchase,PHPurchaseResolution.BUY);
 	}
 
 	function onPurchaseFail(e:AndroidBillingErrorEvent):void
 	{
-		PlayHaven.playhaven.reportPurchaseResolution(pendingPurchase,PHPurchaseResolution.ERROR);	
+		PlayHaven.playhaven.reportVGPPurchaseResolution(pendingPurchase,PHPurchaseResolution.ERROR);	
 	}
 
 	function onPurchaseCancel(e:AndroidBillingEvent):void
 	{
-		Playhaven.playhaven.reportPurchaseResolution(pendingPurchase,PurchaseResolution.CANCEL);
+		Playhaven.playhaven.reportVGPPurchaseResolution(pendingPurchase,PHPurchaseResolution.CANCEL);
 	}
+
+## Tracking IAP Not Triggered by a VGP Content Unit (optional) ##
+
+In some cases, you may have IAP transactions in your application which are not triggered by a PlayHaven VGP Content Unit, but you still wish to report to PlayHaven to be tracked.  In these instances, you won't have a `PHPurchase` object returned from PlayHaven to pass to `reportPurchaseVGPPurchaseResolution`; instead,you may pass the product ID, quantity, and  resolution to the `trackIAPResolution` method instead:
+
+
+    PlayHaven.playhaven.trackIAPResolution(productId, 1, PHPurchaseResolution.BUY);
 
 
 ## Building the application ##
